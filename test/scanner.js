@@ -14,15 +14,11 @@ var badExpression1 = '(+ (* 4 5) 4';
 var expectedTokens = [
   { token: '(', type: 'L_PAREN' },
   { token: '+', type:'ATOM' },
-  { token: ' ', type: 'WHITESPACE' },
   { token: '(', type: 'L_PAREN' },
   { token: '*', type:'ATOM' },
-  { token: ' ', type: 'WHITESPACE' },
   { token: '4', type: 'NUMBER' },
-  { token: ' ', type: 'WHITESPACE' },
   { token: '5', type: 'NUMBER' },
   { token: ')', type: 'R_PAREN' },
-  { token: ' ', type: 'WHITESPACE' },
   { token: '4', type: 'NUMBER' },
   { token: ')', type: 'R_PAREN' }
 ];
