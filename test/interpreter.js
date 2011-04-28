@@ -6,33 +6,31 @@ var Assert = require('assert');
 var Environment = require('../lib/environment');
 var Interpreter = require('../lib/interpreter');
 
-var emptyEnv = Environment.createEnvironment();
-
-exports['myEval number expressions'] = function () {
+exports['eval number expressions'] = function () {
 
   var number1 = Interpreter.myEval({
       type: 'NUMBER',
       value: '23.42'
-    }, emptyEnv);
+    });
 
   Assert.strictEqual(number1, 23.42);
 
   var number2 = Interpreter.myEval({
       type: 'NUMBER',
       value: '12345'
-    }, emptyEnv);
+    });
 
   Assert.strictEqual(number2, 12345);
 };
 
-exports['myEval string expressions'] = function () {
+exports['eval string expressions'] = function () {
   var env = Environment.createEnvironment();
   env.put('str', 'ASDF! fsklj;la');
 
   var str1 = Interpreter.myEval({
       type: 'STRING',
       value: 'Hurr Durr Derp!'
-    }, emptyEnv);
+    });
 
   Assert.strictEqual(str1, 'Hurr Durr Derp!');
 
@@ -70,7 +68,7 @@ exports['test myEval environment'] = function () {
 };
 
 // (+ 10 32) == 42
-exports['myEval sequence'] = function () {
+exports['eval sequence'] = function () {
   var env = Environment.createEnvironment();
   env.put('someVal', 1340);
 
@@ -97,7 +95,7 @@ exports['myEval sequence'] = function () {
   Assert.strictEqual(val2, 1337);
 };
 
-exports['myEval define'] = function () {
+exports['eval define'] = function () {
   var env = Environment.createEnvironment();
   var val1 = Interpreter.myEval({
       type: 'PAIR',
@@ -117,3 +115,69 @@ exports['myEval define'] = function () {
   Assert.strictEqual(val2, 3);
 };
 
+exports['eval cons'] = function () {
+  var env = Environment.createEnvironment();
+  // (define foo (cons 'asdf' 3))
+  var val1 = Interpreter.myEval({
+      type: 'PAIR',
+      value: [
+        { type: 'SYMBOL', value: 'define' },
+        { type: 'SYMBOL', value: 'foo' },
+        { type: 'PAIR',
+          value: [
+            { type: 'SYMBOL', value: 'cons' },
+            { type: 'STRING', value: 'asdf' },
+            { type: 'NUMBER', value: '3' }
+          ]
+        }
+      ]
+    }, env);
+
+  Assert.deepEqual(val1, ['asdf', 3]);
+
+  var val2 = Interpreter.myEval({
+      type: 'SYMBOL',
+      value: 'foo'
+    }, env);
+
+  Assert.deepEqual(val2, ['asdf', 3]);
+
+};
+
+exports['eval car'] = function () {
+  // (car (cons 'asdf' 3))
+  var val1 = Interpreter.myEval({
+      type: 'PAIR',
+      value: [
+        { type: 'SYMBOL', value: 'car' },
+        { type: 'PAIR',
+          value: [
+            { type: 'SYMBOL', value: 'cons' },
+            { type: 'STRING', value: 'asdf' },
+            { type: 'NUMBER', value: '3' }
+          ]
+        }
+      ]
+    });
+
+  Assert.strictEqual(val1, 'asdf');
+};
+
+exports['eval cdr'] = function () {
+  // (cdr (cons 'asdf' 3))
+  var val1 = Interpreter.myEval({
+      type: 'PAIR',
+      value: [
+        { type: 'SYMBOL', value: 'cdr' },
+        { type: 'PAIR',
+          value: [
+            { type: 'SYMBOL', value: 'cons' },
+            { type: 'STRING', value: 'asdf' },
+            { type: 'NUMBER', value: '3' }
+          ]
+        }
+      ]
+    });
+
+  Assert.strictEqual(val1, 3);
+};
