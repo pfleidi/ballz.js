@@ -1,5 +1,5 @@
 /*!
- * Interpreter unit tests
+ * Interpreter unit test
  */
 
 var Assert = require('assert');
@@ -75,7 +75,7 @@ exports['myEval sequence'] = function () {
   env.put('someVal', 1340);
 
   var val1 = Interpreter.myEval({
-      type: 'SEQUENCE', 
+      type: 'PAIR',
       value: [
         { type: 'SYMBOL', value: '+' },
         { type: 'NUMBER', value: '10' },
@@ -86,7 +86,7 @@ exports['myEval sequence'] = function () {
   Assert.strictEqual(val1, 42);
 
   var val2 = Interpreter.myEval({
-      type: 'SEQUENCE', 
+      type: 'PAIR',
       value: [
         { type: 'SYMBOL', value: '-' },
         { type: 'SYMBOL', value: 'someVal' },
@@ -100,7 +100,7 @@ exports['myEval sequence'] = function () {
 exports['myEval define'] = function () {
   var env = Environment.createEnvironment();
   var val1 = Interpreter.myEval({
-      type: 'SEQUENCE', 
+      type: 'PAIR',
       value: [
         { type: 'SYMBOL', value: 'define' },
         { type: 'SYMBOL', value: 'someVal' },
@@ -110,7 +110,7 @@ exports['myEval define'] = function () {
   Assert.strictEqual(val1, 3);
 
   var val2 = Interpreter.myEval({
-      type: 'SYMBOL', 
+      type: 'SYMBOL',
       value: 'someVal'
     }, env);
 
