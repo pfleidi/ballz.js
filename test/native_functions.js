@@ -75,3 +75,16 @@ exports['test equals'] = function () {
   var val3 = Functions['eq?'](['doo', 'doo']);
   Assert.strictEqual(val3, true);
 };
+
+exports['test cons'] = function () {
+  var val1 = Functions.cons(['a', 23]);
+  Assert.deepEqual(val1, ['a', 23]);
+};
+
+exports['test car'] = function () {
+  Assert.strictEqual(Functions.car([['a', 'b']]), 'a');
+};
+
+exports['test cdr'] = function () {
+  Assert.strictEqual(Functions.cdr([['a', 'b']]), 'b');
+};
