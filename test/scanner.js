@@ -1,29 +1,57 @@
 /*!
- * test the scanner
- */
+* test the scanner
+*/
 
 
 var Assert = require('assert');
 var Scanner = require('../lib/scanner');
 
-var expression = '(+ (* 4 54) 4.23)';
-var badExpression0 = '(+ (* 4 5) 4))';
-var badExpression1 = '(+ (* 4 5) 4';
+exports['test scan symbol'] = function () {
+  var val1 = "(define x 4)";
 
-
-var expectedTokens = [
-  { token: '(', type: 'L_PAREN' },
-  { token: '+', type:'ATOM' },
-  { token: '(', type: 'L_PAREN' },
-  { token: '*', type:'ATOM' },
-  { token: '4', type: 'NUMBER' },
-  { token: '54', type: 'NUMBER' },
-  { token: ')', type: 'R_PAREN' },
-  { token: '4.23', type: 'NUMBER' },
-  { token: ')', type: 'R_PAREN' }
-];
-
-exports.tokenize = function tokenize() {
-  var tokens = Scanner.tokenize(expression);
-  Assert.deepEqual(tokens, expectedTokens);
+  Assert.deepEqual(Scanner.tokenize(val1), [
+    { token: '(', type: 'L_PAREN' },
+    { token: 'define', type: 'SYMBOL' },
+    { token: 'x', type: 'SYMBOL' },
+    { token: '4', type: 'NUMBER' },
+    { token: ')', type: 'R_PAREN' }
+  ]);
 };
+
+exports['test scan string'] = function () {
+  var val1 = "(define x 'asdf')"
+  Assert.deepEqual(Scanner.tokenize(val1), [
+    { token: '(', type: 'L_PAREN' },
+    { token: 'define', type: 'SYMBOL' },
+    { token: 'x', type: 'SYMBOL' },
+    { token: 'asdf', type: 'STRING' },
+    { token: ')', type: 'R_PAREN' }
+  ]); 
+};
+
+exports['test scan number'] = function () {
+  var val1 = "(+ 4 4)"
+  Assert.deepEqual(Scanner.tokenize(val1), [
+    { token: '(', type: 'L_PAREN' },
+    { token: '+', type: 'SYMBOL' },
+    { token: '4', type: 'NUMBER' },
+    { token: '4', type: 'NUMBER' },
+    { token: ')', type: 'R_PAREN' }
+  ]); 
+};
+
+exports['test scan complex'] = function () {
+  var val1 = "(cons 'asdf' (cons 4 null))"
+  Assert.deepEqual(Scanner.tokenize(val1), [
+    { token: '(', type: 'L_PAREN' },
+    { token: 'cons', type: 'SYMBOL' },
+    { token: 'asdf', type: 'STRING' },
+    { token: '(', type: 'L_PAREN'},
+    { token: 'cons', type: 'SYMBOL' },
+    { token: '4', type: 'NUMBER' },
+    { token: 'null', type: 'SYMBOL'},
+    { token: ')', type: 'R_PAREN'},
+    { token: ')', type: 'R_PAREN'}
+  ]); 
+};
+
