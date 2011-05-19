@@ -2,14 +2,7 @@ var Assert = require('assert');
 var Parser = require('../lib/parser');
 var Scanner = require('../lib/scanner');
 exports['test parse define'] = function () {
-  var val1 = [ 
-    { token: '(', type: 'L_PAREN' },
-    { token: 'define', type: 'SYMBOL' },
-    { token: 'x', type: 'SYMBOL' },
-    { token: 'asdf', type: 'STRING' },
-    { token: ')', type: 'R_PAREN' } ];
-  
-  Assert.deepEqual(Parser.parse(val1), {
+  Assert.deepEqual(Parser.parse("(define x 'asdf')"), {
     type: 'PAIR',
     value: [
       { type: 'PAIR',
@@ -23,8 +16,7 @@ exports['test parse define'] = function () {
 };
 
 exports['parse cons'] = function () {
-  var val1 = Scanner.tokenize('(cons x (cons 5 null))');
-  Assert.deepEqual(Parser.parse(val1), {
+  Assert.deepEqual(Parser.parse("(cons x (cons 5 null))"), {
     type: 'PAIR',
     value: [
       { type: 'PAIR',
@@ -42,9 +34,7 @@ exports['parse cons'] = function () {
 };
 
 exports['parse multiple'] = function () {
-  var val1 = Scanner.tokenize("(cons x (cons 5 null)) (define x 'asdf')");
-  
-  Assert.deepEqual(Parser.parse(val1), {
+  Assert.deepEqual(Parser.parse("(cons x (cons 5 null)) (define x 'asdf')"), {
     type: 'PAIR',
     value: [
       { type: 'PAIR',
