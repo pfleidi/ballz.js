@@ -38,7 +38,32 @@ Vows.describe('test all components of interpreter').addBatch({
         var test = '(+ (* 2 2) (* 4 4))';
         exec(test, 20);
       }
+    },
 
-    } 
+    'test boolean expressions' : {
+      '1 == 1' : function () {
+        var test = '(eq? 1 1)';
+        exec(test, true);
+      },
+
+      '1 === 2' : function () {
+        var test = '(eq? 1 2)';
+        exec(test, false);
+      }
+    },
+
+    'test conditional expressions' : {
+
+      'if (1 === 1)' : function () {
+        var test = '(if (eq? 1 1) #t #f)';
+        exec(test, true);
+      },
+
+      'if (1 === 2)' : function () {
+        var test = '(if (eq? 1 2) #t #f)';
+        exec(test, false);
+      }
+
+    }
 
   }).export(module);

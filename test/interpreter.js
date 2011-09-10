@@ -26,6 +26,15 @@ Vows.describe('evaluate simple instructions').addBatch({
       Assert.strictEqual(number2, 12345);
     },
 
+    'eval boolean expressions' : function () {
+      var env = Environment.createEnvironment();
+      var bool1 = interpreter.eval({ type: 'SYMBOL', value: '#t' });
+      Assert.strictEqual(bool1, true);
+      
+      var bool2 = interpreter.eval({ type: 'SYMBOL', value: '#f' });
+      Assert.strictEqual(bool2, false);
+    },
+
     'eval string expressions' : function () {
       var env = Environment.createEnvironment();
       env.put('str', 'ASDF! fsklj;la');
@@ -154,6 +163,26 @@ Vows.describe('evaluate simple instructions').addBatch({
         });
 
       Assert.strictEqual(val1, 3);
+    },
+
+    'eval if' : function () {
+      // (if (eq? 1 1) #t #f)
+      var val = interpreter.eval({
+          type: 'PAIR',
+          value: [
+            { type: 'SYMBOL', value: 'if' },
+            { type: 'PAIR',
+              value: [
+                { type: 'SYMBOL', value: 'eq?' },
+                { type: 'NUMBER', value: '1' },
+                { type: 'NUMBER', value: '1' }
+              ] },
+            { type: 'SYMBOL', value: '#t' },
+            { type: 'SYMBOL', value: '#f' }
+          ]
+        });
+
+      Assert.strictEqual(val, true);
     }
 
-}).export(module);
+  }).export(module);
