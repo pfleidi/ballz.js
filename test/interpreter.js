@@ -183,6 +183,61 @@ Vows.describe('evaluate simple instructions').addBatch({
         });
 
       Assert.strictEqual(val, true);
+    },
+
+    'eval cond without else' : function () {
+      // (cond ((eq? 1 2) #f) ((eq? 2 2) #t)
+      var val = interpreter.eval({
+          type: 'PAIR',
+          value: [
+            { type: 'SYMBOL', value: 'cond' },
+            { type: 'PAIR',
+              value: [
+                { type: 'PAIR',
+                  value: [
+                     { type: 'SYMBOL', value: 'eq?' },
+                     { type: 'NUMBER', value: '1' },
+                     { type: 'NUMBER', value: '2' }
+                  ]
+                },
+                { type: 'SYMBOL', value: '#f' }
+              ]
+            },
+            { type: 'PAIR',
+              value: [
+                { type: 'PAIR',
+                  value: [
+                     { type: 'SYMBOL', value: 'eq?' },
+                     { type: 'NUMBER', value: '2' },
+                     { type: 'NUMBER', value: '2' }
+                  ]
+                },
+                { type: 'SYMBOL', value: '#t' }
+              ]
+            }
+    ]
+}
+      );      
+      Assert.strictEqual(val, true);
+    },
+
+    'eval cond with else' : function () {
+      // (cond ((eq? 1 2) #f) ((eq? 2 2) #t))
+       var val = interpreter.eval({
+          type: 'PAIR',
+          value: [
+            { type: 'SYMBOL', value: 'cond' },
+            { type: 'PAIR',
+              value: [
+                { type: 'SYMBOL', value: 'else'},
+                { type: 'STRING', value: 'foo' }
+              ]
+            }
+          ]
+        });
+      
+      Assert.strictEqual(val, 'foo');
     }
+
 
   }).export(module);
