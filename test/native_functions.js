@@ -88,6 +88,15 @@ Vows.describe('evaluate simple instructions').addBatch({
 
     'test cdr' : function () {
       Assert.strictEqual(Functions.cdr([['a', 'b']]), 'b');
+    },
+
+    'test not': function () {
+      var val1 = Functions['not']([true]);
+      Assert.strictEqual(val1, false);
+
+      var val2 = Functions['not']([false]);
+      Assert.strictEqual(val2, true);
+
     }
 
   }).export(module);
