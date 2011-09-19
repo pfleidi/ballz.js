@@ -27,12 +27,11 @@ repl.setPrompt('ballz >');
 repl.on('line', function (cmd) {
     try {
       console.log('==> ' + exec(cmd));
-      repl.prompt();
     } catch (e) {
       console.log(e.message);
       console.log(e.stack);
-      repl.prompt();
     }
+    repl.prompt();
   });
 
 repl.on('SIGINT', function () {
