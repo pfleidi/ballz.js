@@ -113,7 +113,21 @@ Vows.describe('evaluate simple instructions').addBatch({
 
       var val5 = Functions['or']([false, false, true]);
       Assert.strictEqual(val5, true);
-    }
+    },
 
+    'test and': function () {
+      var val1 = Functions['and']([true, true]);
+      Assert.strictEqual(val1, true);
+
+      var val2 = Functions['and']([false, true]);
+      Assert.strictEqual(val2, false);
+
+      var val3 = Functions['and']([true, false]);
+      Assert.strictEqual(val3, false);
+
+      var val4 = Functions['and']([false, false]);
+      Assert.strictEqual(val4, false);
+
+    }
 
   }).export(module);
