@@ -62,6 +62,26 @@ Vows.describe('test all components of interpreter').addBatch({
       'if (1 === 2)' : function () {
         var test = '(if (eq? 1 2) #t #f)';
         exec(test, false);
+      },
+
+      'cond without else 1' : function () {
+        var test = '(cond ((eq? 1 2) "a") ((eq? 2 2) "b")';
+        exec(test, 'b');
+      },
+
+      'cond without else 2' : function () {
+        var test = '(cond ((eq? 1 1) "a") ((eq? 2 2) "b")';
+        exec(test, 'a');
+      },
+
+      'cond with else 1' : function () {
+        var test = '(cond (#f "should not happen") (else "test"))';
+        exec(test, 'test');
+      },
+
+      'cond with else 2' : function () {
+        var test = '(cond (#f "a") (#f "b") (#t "c") (else "test"))';
+        exec(test, 'c');
       }
 
     }
