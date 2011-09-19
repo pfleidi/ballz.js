@@ -128,6 +128,20 @@ Vows.describe('evaluate simple instructions').addBatch({
       var val4 = Functions['and']([false, false]);
       Assert.strictEqual(val4, false);
 
+    },
+
+    'test xor': function () {
+      var val1 = Functions['xor']([true, true]);
+      Assert.strictEqual(val1, false);
+
+      var val2 = Functions['xor']([false, true]);
+      Assert.strictEqual(val2, true);
+
+      var val3 = Functions['xor']([true, false]);
+      Assert.strictEqual(val3, true);
+
+      var val4 = Functions['xor']([false, false]);
+      Assert.strictEqual(val4, false);
     }
 
   }).export(module);
