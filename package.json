@@ -1,0 +1,24 @@
+{ "name" : "ballz",
+  "description" : "A small and incomplete LISP interpreter for node",
+  "version" : "0.1.0",
+  "author" : "Sven Pfleiderer <sven@roothausen.de>, Dominik Hübner <conact@dhuebner.com>",
+  "directories" : { "lib" : "lib" },
+  "repository" : { 
+    "type" : "git",
+    "url" : "http://github.com/pfleidi/ballz.js.git"
+  },
+  "bugs" : { 
+    "web" : "http://github.com/pfleidi/ballz.js/issues" 
+  }, 
+  "licenses" : [{ 
+      "type" : "MIT",
+      "url" : "http://github.com/pfleidi/ballz.js/raw/master/LICENSE"
+    }],
+  "dependencies" : {
+  },
+  "devDependencies": {
+    "vows" : ""
+  },
+  "engines" : { "node": ">= 0.4.0" },
+  "main" : "index"
+}
