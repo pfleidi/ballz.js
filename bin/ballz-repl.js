@@ -7,7 +7,7 @@
  */
 
 var Readline = require('readline');
-var Util = require('util');
+var Eyes = require('eyes');
 
 var Parser = require('../lib/parser');
 var Environment = require('../lib/environment');
@@ -19,7 +19,7 @@ var repl = Readline.createInterface(process.stdin, process.stdout);
 
 function exec(cmd) {
   var ast = Parser.parse(cmd);
-  return Util.inspect(interpreter.eval(ast));
+  return Eyes.inspect(interpreter.eval(ast));
 }
 
 repl.setPrompt('ballz >');
