@@ -97,11 +97,30 @@ Vows.describe('test all components of interpreter').addBatch({
         execAssert(test, 30);
       },
 
+      'multiple argument lambda' : function () {
+        var test = '((lambda (a b c) (+ a b c)) 1 2 3)';
+        execAssert(test, 6);
+      },
+
       'define lambda and call it' : function () {
         var test = '(define timesten (lambda (n) (* n 10)))';
         exec(test);
         execAssert('(timesten 5)', 50);
-      } 
+      }
+
+    },
+
+    'test closures' : {
+
+      'simple closure' : function () {
+        exec('(define multiplier 10)');
+        execAssert('((lambda (x) (* x multiplier)) 10)', 100);
+      },
+
+      'simple closure' : function () {
+        exec('(define multipair (cons 2 5))');
+        execAssert('((lambda (x) (* (car multipair) (cdr multipair) x)) 10)', 100);
+      }
 
     }
 
