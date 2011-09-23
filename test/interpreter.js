@@ -30,7 +30,7 @@ Vows.describe('evaluate simple instructions').addBatch({
       var env = Environment.createEnvironment();
       var bool1 = interpreter.eval({ type: 'SYMBOL', value: '#t' });
       Assert.strictEqual(bool1, true);
-      
+
       var bool2 = interpreter.eval({ type: 'SYMBOL', value: '#f' });
       Assert.strictEqual(bool2, false);
     },
@@ -63,7 +63,7 @@ Vows.describe('evaluate simple instructions').addBatch({
       // (+ 10 32) == 42
       var val1 = interpreter.eval({
           type: 'PAIR',
-          value: 
+          value:
           [
             { type: 'SYMBOL', value: '+' },
             { type: 'NUMBER', value: '10' },
@@ -74,7 +74,7 @@ Vows.describe('evaluate simple instructions').addBatch({
       // (- someVal 3)
       var val2 = interpreter.eval({
           type: 'PAIR',
-          value: 
+          value:
           [ { type: 'SYMBOL', value: '-' },
             { type: 'SYMBOL', value: 'someVal' },
             { type: 'NUMBER', value: '3' } ] }, env);
@@ -82,7 +82,7 @@ Vows.describe('evaluate simple instructions').addBatch({
       Assert.strictEqual(val2, 1337);
 
       var val3 = interpreter.eval({ type: 'PAIR',
-          value: 
+          value:
           [ { type: 'SYMBOL', value: '+' },
             { type: 'NUMBER', value: '3' },
             { type: 'NUMBER', value: '2' } ] }, env);
@@ -137,7 +137,7 @@ Vows.describe('evaluate simple instructions').addBatch({
       // (car (cons 'asdf' 3))
       var val3 = interpreter.eval({
           type: 'PAIR',
-          value: 
+          value:
           [
             { type: 'SYMBOL', value: 'car' },
             { type: 'SYMBOL', value: 'foo' } ] }
@@ -195,9 +195,9 @@ Vows.describe('evaluate simple instructions').addBatch({
               value: [
                 { type: 'PAIR',
                   value: [
-                     { type: 'SYMBOL', value: 'eq?' },
-                     { type: 'NUMBER', value: '1' },
-                     { type: 'NUMBER', value: '2' }
+                    { type: 'SYMBOL', value: 'eq?' },
+                    { type: 'NUMBER', value: '1' },
+                    { type: 'NUMBER', value: '2' }
                   ]
                 },
                 { type: 'SYMBOL', value: '#f' }
@@ -207,23 +207,23 @@ Vows.describe('evaluate simple instructions').addBatch({
               value: [
                 { type: 'PAIR',
                   value: [
-                     { type: 'SYMBOL', value: 'eq?' },
-                     { type: 'NUMBER', value: '2' },
-                     { type: 'NUMBER', value: '2' }
+                    { type: 'SYMBOL', value: 'eq?' },
+                    { type: 'NUMBER', value: '2' },
+                    { type: 'NUMBER', value: '2' }
                   ]
                 },
                 { type: 'SYMBOL', value: '#t' }
               ]
             }
-    ]
-}
-      );      
+          ]
+        }
+      );
       Assert.strictEqual(val, true);
     },
 
     'eval cond with else' : function () {
       // (cond ((eq? 1 2) #f) ((eq? 2 2) #t))
-       var val = interpreter.eval({
+      var val = interpreter.eval({
           type: 'PAIR',
           value: [
             { type: 'SYMBOL', value: 'cond' },
@@ -235,8 +235,33 @@ Vows.describe('evaluate simple instructions').addBatch({
             }
           ]
         });
-      
+
       Assert.strictEqual(val, 'foo');
+    },
+
+    'eval lambda statements' : {
+      '((lambda (n) (* n 10)) 3)' : function () {
+        var val = interpreter.eval({
+            type : "PAIR",
+            value : [ {
+                type : "PAIR", value : [
+                  { type : "SYMBOL", value : "lambda" },
+                  { type : "PAIR",
+                    value: [ { type : "SYMBOL", value : "n" } ]
+                  },
+                  {
+                    type: "PAIR",
+                    value: [
+                      { type : "SYMBOL", value : "*" },
+                      { type : "SYMBOL", value : "n" },
+                      { type : "NUMBER", value : "10" }
+                    ] }
+                ] },
+              { type : "NUMBER", value : "3" }
+            ] });
+
+        Assert.strictEqual(val, 30);
+      }
     }
 
 
