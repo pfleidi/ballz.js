@@ -15,6 +15,7 @@
       "url" : "http://github.com/pfleidi/ballz.js/raw/master/LICENSE"
     }],
   "dependencies" : {
+    "eyes" : ""
   },
   "devDependencies": {
     "vows" : ""
