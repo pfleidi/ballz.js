@@ -75,7 +75,7 @@ Vows.describe('evaluate simple instructions').addBatch({
       var val2 = interpreter.eval({
           type: 'PAIR',
           value:
-          [ { type: 'SYMBOL', value: 'minus },
+          [ { type: 'SYMBOL', value: 'minus' },
             { type: 'SYMBOL', value: 'someVal' },
             { type: 'NUMBER', value: '3' } ] }, env);
 
