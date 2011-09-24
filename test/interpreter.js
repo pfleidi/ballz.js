@@ -65,7 +65,7 @@ Vows.describe('evaluate simple instructions').addBatch({
           type: 'PAIR',
           value:
           [
-            { type: 'SYMBOL', value: '+' },
+            { type: 'SYMBOL', value: 'plus' },
             { type: 'NUMBER', value: '10' },
             { type: 'NUMBER', value: '32' } ] }, env);
 
@@ -75,7 +75,7 @@ Vows.describe('evaluate simple instructions').addBatch({
       var val2 = interpreter.eval({
           type: 'PAIR',
           value:
-          [ { type: 'SYMBOL', value: '-' },
+          [ { type: 'SYMBOL', value: 'minus },
             { type: 'SYMBOL', value: 'someVal' },
             { type: 'NUMBER', value: '3' } ] }, env);
 
@@ -83,7 +83,7 @@ Vows.describe('evaluate simple instructions').addBatch({
 
       var val3 = interpreter.eval({ type: 'PAIR',
           value:
-          [ { type: 'SYMBOL', value: '+' },
+          [ { type: 'SYMBOL', value: 'plus' },
             { type: 'NUMBER', value: '3' },
             { type: 'NUMBER', value: '2' } ] }, env);
 
@@ -252,7 +252,7 @@ Vows.describe('evaluate simple instructions').addBatch({
                   {
                     type: "PAIR",
                     value: [
-                      { type : "SYMBOL", value : "*" },
+                      { type : "SYMBOL", value : "multiply" },
                       { type : "SYMBOL", value : "n" },
                       { type : "NUMBER", value : "10" }
                     ] }

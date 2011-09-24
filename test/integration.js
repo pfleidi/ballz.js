@@ -25,21 +25,21 @@ Vows.describe('test all components of interpreter').addBatch({
     'some simple calclulations' : {
 
       '3 + 2 = 5' : function () {
-        execAssert('(+ 3 2)', 5);
+        execAssert('(plus 3 2)', 5);
       },
 
       '10 + 2 - 5 = 7' : function () {
-        var test = '(- (+ 10 2) 5)';
+        var test = '(minus (plus 10 2) 5)';
         execAssert(test, 7)
       },
 
       '1 + 2 + 3 + 4 + 5 = 15' : function () {
-        var test = '(+ 1 2 3 4 5)';
+        var test = '(plus 1 2 3 4 5)';
         execAssert(test, 15);
       },
 
       '2 * 2 + 4 * 4 = 20' : function () {
-        var test = '(+ (* 2 2) (* 4 4))';
+        var test = '(plus (multiply 2 2) (multiply 4 4))';
         execAssert(test, 20);
       }
     },
@@ -93,17 +93,17 @@ Vows.describe('test all components of interpreter').addBatch({
     'test lambda expressions' : {
 
       'simple lambda' : function () {
-        var test = '((lambda (n) (* n 10)) 3)';
+        var test = '((lambda (n) (multiply n 10)) 3)';
         execAssert(test, 30);
       },
 
       'multiple argument lambda' : function () {
-        var test = '((lambda (a b c) (+ a b c)) 1 2 3)';
+        var test = '((lambda (a b c) (plus a b c)) 1 2 3)';
         execAssert(test, 6);
       },
 
       'define lambda and call it' : function () {
-        var test = '(define timesten (lambda (n) (* n 10)))';
+        var test = '(define timesten (lambda (n) (multiply n 10)))';
         exec(test);
         execAssert('(timesten 5)', 50);
       }
@@ -114,12 +114,12 @@ Vows.describe('test all components of interpreter').addBatch({
 
       'simple closure' : function () {
         exec('(define multiplier 10)');
-        execAssert('((lambda (x) (* x multiplier)) 10)', 100);
+        execAssert('((lambda (x) (multiply x multiplier)) 10)', 100);
       },
 
       'simple closure' : function () {
         exec('(define multipair (cons 2 5))');
-        execAssert('((lambda (x) (* (car multipair) (cdr multipair) x)) 10)', 100);
+        execAssert('((lambda (x) (multiply (car multipair) (cdr multipair) x)) 10)', 100);
       }
 
     }
