@@ -1,0 +1,31 @@
+(define + plus)        
+(define - minus)
+(define * multiply)
+(define / divide)
+
+
+(assert (+ 3 2) 5)
+(assert (- (+ 10 2) 5) 7)
+(assert (+ 1 2 3 4 5) 15)
+(assert (+ (* 2 2) (* 4 4)) 20)
+
+(assert (eq? 1 1) #t)
+(assert (eq? 1 2) #f)
+
+(assert (if (eq? 1 2) #t #f) #f)
+(assert (cond ((eq? 1 2) "a") ((eq? 2 2) "b")) "b")
+(assert (cond ((eq? 1 1) "a") ((eq? 2 2) "b")) "a")
+(assert (cond (#f "should not happen") (else "test")) "test")
+(assert (cond (#f "a") (#f "b") (#t "c") (else "test")) "c")
+
+(assert ((lambda (n) (* n 10)) 3) 30)
+(assert ((lambda (a b c) (+ a b c)) 1 2 3) 6)
+
+(define timesten (lambda (n) (* n 10)))
+(assert (timesten (+ 2 3)) 50)
+
+(define multiplier 10)
+(assert ((lambda (x) (* x multiplier)) 10) 100)
+
+(define multipair (cons 2 5))
+(assert ((lambda (x) (* (car multipair) (cdr multipair) x)) 10) 100)
