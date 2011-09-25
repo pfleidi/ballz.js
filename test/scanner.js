@@ -12,48 +12,48 @@ Vows.describe('evaluate simple instructions').addBatch({
       var val1 = "(define x 4)";
 
       Assert.deepEqual(Scanner.tokenize(val1), [
-          { token: '(', type: 'L_PAREN' },
-          { token: 'define', type: 'SYMBOL' },
-          { token: 'x', type: 'SYMBOL' },
-          { token: '4', type: 'NUMBER' },
-          { token: ')', type: 'R_PAREN' }
+          { token: '(', type: 'L_PAREN', line: 1 },
+          { token: 'define', type: 'SYMBOL', line: 1 },
+          { token: 'x', type: 'SYMBOL', line: 1 },
+          { token: '4', type: 'NUMBER', line: 1 },
+          { token: ')', type: 'R_PAREN', line: 1 }
         ]);
     },
 
     'test scan string' : function () {
       var val1 = "(define x 'asdf')"
       Assert.deepEqual(Scanner.tokenize(val1), [
-          { token: '(', type: 'L_PAREN' },
-          { token: 'define', type: 'SYMBOL' },
-          { token: 'x', type: 'SYMBOL' },
-          { token: 'asdf', type: 'STRING' },
-          { token: ')', type: 'R_PAREN' }
+          { token: '(', type: 'L_PAREN', line: 1 },
+          { token: 'define', type: 'SYMBOL', line: 1 },
+          { token: 'x', type: 'SYMBOL', line: 1 },
+          { token: 'asdf', type: 'STRING', line: 1 },
+          { token: ')', type: 'R_PAREN', line: 1 }
         ]); 
     },
 
     'test scan number' : function () {
       var val1 = "(+ 4 4)"
       Assert.deepEqual(Scanner.tokenize(val1), [
-          { token: '(', type: 'L_PAREN' },
-          { token: '+', type: 'SYMBOL' },
-          { token: '4', type: 'NUMBER' },
-          { token: '4', type: 'NUMBER' },
-          { token: ')', type: 'R_PAREN' }
+          { token: '(', type: 'L_PAREN', line: 1 },
+          { token: '+', type: 'SYMBOL', line: 1 },
+          { token: '4', type: 'NUMBER', line: 1 },
+          { token: '4', type: 'NUMBER', line: 1 },
+          { token: ')', type: 'R_PAREN', line: 1 }
         ]); 
     },
 
     'test scan complex' : function () {
-      var val1 = "(cons 'asdf' (cons 4 null))"
+      var val1 = "(cons 'asdf'\n (cons 4 null))"
       Assert.deepEqual(Scanner.tokenize(val1), [
-          { token: '(', type: 'L_PAREN' },
-          { token: 'cons', type: 'SYMBOL' },
-          { token: 'asdf', type: 'STRING' },
-          { token: '(', type: 'L_PAREN'},
-          { token: 'cons', type: 'SYMBOL' },
-          { token: '4', type: 'NUMBER' },
-          { token: 'null', type: 'SYMBOL'},
-          { token: ')', type: 'R_PAREN'},
-          { token: ')', type: 'R_PAREN'}
+          { token: '(', type: 'L_PAREN', line: 1 },
+          { token: 'cons', type: 'SYMBOL', line: 1 },
+          { token: 'asdf', type: 'STRING', line: 1 },
+          { token: '(', type: 'L_PAREN', line: 2 },
+          { token: 'cons', type: 'SYMBOL', line: 2 },
+          { token: '4', type: 'NUMBER', line: 2 },
+          { token: 'null', type: 'SYMBOL', line: 2 },
+          { token: ')', type: 'R_PAREN', line: 2 },
+          { token: ')', type: 'R_PAREN', line: 2 }
         ]); 
     }
 
