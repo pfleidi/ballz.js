@@ -16,7 +16,7 @@ Vows.describe('Test lisp helpers').addBatch({
           });
       },
 
-      'pair()' : function () {
+      'cons()' : function () {
         Assert.deepEqual(Lisp.cons(2, 3), {
             type: 'PAIR',
             left: 2,
@@ -57,18 +57,17 @@ Vows.describe('Test lisp helpers').addBatch({
 
     'test helper functions' : {
 
-      'car' : function () {
-        Assert.strictEqual(Lisp.car(Lisp.pair('a', 'b')), 'a');
+      'car()' : function () {
+        Assert.strictEqual(Lisp.car(Lisp.cons('a', 'b')), 'a');
       },
 
-      'cdr' : function () {
-        Assert.strictEqual(Lisp.cdr(Lisp.pair('a', 'b')), 'b');
+      'cdr()' : function () {
+        Assert.strictEqual(Lisp.cdr(Lisp.cons('a', 'b')), 'b');
       },
 
-
-      'map' : function () {
+      'map()' : function () {
         var cons = Lisp.cons;
-        
+
         var val = cons(1,
           cons(2, cons(3,
               cons(4, cons(5, Lisp.nil() ) ) ) ) );
@@ -80,9 +79,36 @@ Vows.describe('Test lisp helpers').addBatch({
         Assert.deepEqual(Lisp.map(val, function (el) {
               return el * el;
             }), expected);
+      },
+
+      'reduce()' : function () {
+        var cons = Lisp.cons;
+
+        var val = cons(1,
+          cons(2, cons(3,
+              cons(4, cons(5, Lisp.nil() ) ) ) ) );
+
+        Assert.deepEqual(Lisp.reduce(val, function (acc, curr) {
+              return acc + curr;
+            }), 15);
+
+       var val2 = cons(1,
+          cons(2, cons(3,
+              cons(4, cons(5, Lisp.nil() ) ) ) ) );
+
+        Assert.deepEqual(Lisp.reduce(val2, function (acc, curr) {
+              return acc - curr;
+            }), -13);
+
+      },
+
+      'length()' : function () {
+        var cons = Lisp.cons;
+        var val = cons(1,
+          cons(2, cons(3,
+              cons(4, cons(5, Lisp.nil() ) ) ) ) );
+        Assert.strictEqual(Lisp.length(val), 5);
       }
 
     }
-
-
   }).export(module);
