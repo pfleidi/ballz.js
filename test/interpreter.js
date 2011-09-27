@@ -181,7 +181,7 @@ Vows.describe('evaluate simple instructions').addBatch({
           cons(
             cons(symbol('#f'),
                 cons(number('1'), nil() ) ),
-            cons(cons(symbol('#t'), 
+            cons(cons(symbol('#t'),
                   cons(number('2'), nil() ) ),
                 nil() ) ) )
       );
@@ -194,147 +194,60 @@ Vows.describe('evaluate simple instructions').addBatch({
         cons(symbol('cond'),
           cons(
             cons(symbol('#t'),
-                cons(number('1'), nil() ) ),
-            cons(cons(symbol('#t'), 
-                  cons(number('2'), nil() ) ),
-                nil() ) ) )
+              cons(number('1'), nil() ) ),
+            cons(cons(symbol('#t'),
+                cons(number('2'), nil() ) ),
+              nil() ) ) )
       );
 
       Assert.strictEqual(val1, 1);
     },
 
-
-
-    '(cond (else "foo"))' : function () {
+    '(cond (#f 1) (#f 2) (else 3))' : function () {
       var val1 = interpreter.eval(
         cons(symbol('cond'),
           cons(
-            cons(symbol('else'),
-              cons(string('foo'), nil())),
-            nil()))
-      );
+            cons(symbol('#f'),
+              cons(number('1'), nil() ) ),
+            cons(cons(symbol('#f'),
+                cons(number('2'), nil() ) ),
+              cons(cons(symbol('else'),
+                  cons(number('3'), nil() ) ),
+                nil() ) ) ) )
+        );
 
-      Assert.strictEqual(val1, 'foo');
-    },
-    /*
-     '(cdr (cons 'asdf' 3))' : function () {
-     var val1 = interpreter.eval({
-     type: 'PAIR',
-     value: [
-     { type: 'SYMBOL', value: 'cdr' },
-       { type: 'PAIR',
-         value: [
-         { type: 'SYMBOL', value: 'cons' },
-           { type: 'STRING', value: 'asdf' },
-             { type: 'NUMBER', value: '3' }
-             ]
-           }
-         ]
-       });
+        Assert.strictEqual(val1, 3);
+      },
 
-       Assert.strictEqual(val1, 3);
-     },
+      '(cond (else "foo"))' : function () {
+        var val1 = interpreter.eval(
+          cons(symbol('cond'),
+            cons(
+              cons(symbol('else'),
+                cons(string('foo'), nil())),
+              nil()))
+        );
 
-     'eval if' : function () {
-     // (if (eq? 1 1) #t #f)
-     var val = interpreter.eval({
-     type: 'PAIR',
-     value: [
-     { type: 'SYMBOL', value: 'if' },
-       { type: 'PAIR',
-         value: [
-         { type: 'SYMBOL', value: 'eq?' },
-           { type: 'NUMBER', value: '1' },
-             { type: 'NUMBER', value: '1' }
-             ] },
-             { type: 'SYMBOL', value: '#t' },
-               { type: 'SYMBOL', value: '#f' }
-               ]
-             });
+        Assert.strictEqual(val1, 'foo');
+      },
 
-             Assert.strictEqual(val, true);
-           },
+      'eval lambda statements' : {
 
-           'eval cond without else' : function () {
-           // (cond ((eq? 1 2) #f) ((eq? 2 2) #t)
-           var val = interpreter.eval({
-           type: 'PAIR',
-           value: [
-           { type: 'SYMBOL', value: 'cond' },
-             { type: 'PAIR',
-               value: [
-               { type: 'PAIR',
-                 value: [
-                 { type: 'SYMBOL', value: 'eq?' },
-                   { type: 'NUMBER', value: '1' },
-                     { type: 'NUMBER', value: '2' }
-                     ]
-                   },
-                   { type: 'SYMBOL', value: '#f' }
-                   ]
-                 },
-                 { type: 'PAIR',
-                   value: [
-                   { type: 'PAIR',
-                     value: [
-                     { type: 'SYMBOL', value: 'eq?' },
-                       { type: 'NUMBER', value: '2' },
-                         { type: 'NUMBER', value: '2' }
-                         ]
-                       },
-                       { type: 'SYMBOL', value: '#t' }
-                       ]
-                     }
-                   ]
-                 }
-               );
-               Assert.strictEqual(val, true);
-             },
+        '((lambda (n) (multiply n 10)) 3)' : function () {
+          var val = interpreter.eval(
+            cons(
+              cons(symbol('lambda'),
+                cons(
+                  cons(symbol('n'), nil()),
+                  cons(
+                    cons(symbol('multiply'),
+                      cons(symbol('n'),
+                        cons(number('10'), nil() ) ) ),
+                    nil() ) ),
+                nil() ),
+              cons(number('3'), nil() ) )
+          );
+        }
+      }
 
-             'eval cond with else' : function () {
-             // (cond ((eq? 1 2) #f) ((eq? 2 2) #t))
-             var val = interpreter.eval({
-             type: 'PAIR',
-             value: [
-             { type: 'SYMBOL', value: 'cond' },
-               { type: 'PAIR',
-                 value: [
-                 { type: 'SYMBOL', value: 'else'},
-                   { type: 'STRING', value: 'foo' }
-                   ]
-                 }
-               ]
-             });
-
-             Assert.strictEqual(val, 'foo');
-           },
-
-           'eval lambda statements' : {
-           '((lambda (n) (* n 10)) 3)' : function () {
-           var val = interpreter.eval({
-           type : "PAIR",
-           value : [ {
-           type : "PAIR", value : [
-           { type : "SYMBOL", value : "lambda" },
-             { type : "PAIR",
-               value: [ { type : "SYMBOL", value : "n" } ]
-             },
-             {
-               type: "PAIR",
-               value: [
-               { type : "SYMBOL", value : "multiply" },
-                 { type : "SYMBOL", value : "n" },
-                   { type : "NUMBER", value : "10" }
-                   ] }
-                 ] },
-                 { type : "NUMBER", value : "3" }
-                 ] });
-
-                 Assert.strictEqual(val, 30);
-               }
-             }
-
-             */
-
-
-  }).export(module);
+    }).export(module);
