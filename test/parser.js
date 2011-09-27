@@ -4,7 +4,7 @@ var Parser = require('../lib/parser');
 var Scanner = require('../lib/scanner');
 var Lisp = require('../lib/lisp');
 
-var pair = Lisp.pair;
+var cons = Lisp.cons;
 var number = Lisp.number;
 var string = Lisp.string;
 var symbol = Lisp.symbol;
@@ -31,38 +31,40 @@ Vows.describe('evaluate simple instructions').addBatch({
       },
 
       'parse pair': function () {
-        Assert.deepEqual(Parser.parse('(1 . 2)'), pair(number(1), number(2)));
+        Assert.deepEqual(Parser.parse('(1 . 2)'), cons(number(1), number(2)));
       },
 
-      'parse larger pair': function () {
+      'parse larger cons': function () {
         Assert.deepEqual(Parser.parse('(1 2 . 3)'),
-          pair(
+          cons(
             number(1),
-            pair(number(2), number(3) ) )
+            cons(number(2), number(3) ) )
         );
       }
+      // (1 2 . (3 4)) == (1 2 3 4)
+      // (1 2 . ()) == (1 2)
 
     },
 
 
     'test parse define' : function () {
       Assert.deepEqual(Parser.parse('(define x "asdf")'),
-        pair(symbol('define'),
-          pair(symbol('x'),
-            pair(string('asdf'),
+        cons(symbol('define'),
+          cons(symbol('x'),
+            cons(string('asdf'),
               nil() ) ) )
       );
     },
 
 
-    'parse wrapped pairs' : function () {
+    'parse wrapped conss' : function () {
       Assert.deepEqual(Parser.parse('(foo x (foo 5 asdf))'),
-        pair(symbol('foo'),
-          pair(symbol('x'),
-            pair(
-              pair(symbol('foo'),
-                pair(number('5'),
-                  pair(symbol('asdf'), nil() )
+        cons(symbol('foo'),
+          cons(symbol('x'),
+            cons(
+              cons(symbol('foo'),
+                cons(number('5'),
+                  cons(symbol('asdf'), nil() )
                 ) ),
               nil() ) ) )
       );
@@ -70,12 +72,12 @@ Vows.describe('evaluate simple instructions').addBatch({
 
     'parse calculation' : function () {
       Assert.deepEqual(Parser.parse('(- (+ 10 2) 5)'),
-        pair(symbol('-'),
-          pair(
-            pair(symbol('+'),
-              pair(number('10'),
-                pair(number('2'), nil() ) ) ),
-            pair(number('5'), nil() ) ) )
+        cons(symbol('-'),
+          cons(
+            cons(symbol('+'),
+              cons(number('10'),
+                cons(number('2'), nil() ) ) ),
+            cons(number('5'), nil() ) ) )
       );
     }
 

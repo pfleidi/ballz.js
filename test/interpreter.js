@@ -9,29 +9,30 @@ var interpreter = require('../lib/interpreter').createInterpreter(
   Environment.createEnvironment()
 );
 
+var Lisp = require('../lib/lisp');
+
+var cons = Lisp.cons;
+var number = Lisp.number;
+var string = Lisp.string;
+var symbol = Lisp.symbol;
+var nil = Lisp.nil;
+
 Vows.describe('evaluate simple instructions').addBatch({
 
     'eval number expressions' : function () {
-
-      var number1 = interpreter.eval({
-          type: 'NUMBER', value: '23.42'
-        });
-
+      var number1 = interpreter.eval(number('23.42'));
       Assert.strictEqual(number1, 23.42);
 
-      var number2 = interpreter.eval({
-          type: 'NUMBER', value: '12345'
-        });
-
+      var number2 = interpreter.eval(number('12345'));
       Assert.strictEqual(number2, 12345);
     },
 
     'eval boolean expressions' : function () {
       var env = Environment.createEnvironment();
-      var bool1 = interpreter.eval({ type: 'SYMBOL', value: '#t' });
+      var bool1 = interpreter.eval(symbol('#t'));
       Assert.strictEqual(bool1, true);
 
-      var bool2 = interpreter.eval({ type: 'SYMBOL', value: '#f' });
+      var bool2 = interpreter.eval(symbol('#f'));
       Assert.strictEqual(bool2, false);
     },
 
@@ -39,230 +40,204 @@ Vows.describe('evaluate simple instructions').addBatch({
       var env = Environment.createEnvironment();
       env.put('str', 'ASDF! fsklj;la');
 
-      var str1 = interpreter.eval({
-          type: 'STRING', value: 'Hurr Durr Derp!'
-        });
+      var str1 =  interpreter.eval(symbol('str'), env);
+      Assert.strictEqual(str1, 'ASDF! fsklj;la');
 
-      Assert.strictEqual(str1, 'Hurr Durr Derp!');
-
-      var number2 = interpreter.eval({
-          type: 'NUMBER', value: '12345'
-        }, env);
-
-      var str2 =  interpreter.eval({
-          type: 'SYMBOL', value: 'str'
-        }, env);
-
-      Assert.strictEqual(str2, 'ASDF! fsklj;la');
+      var str2 = interpreter.eval(string('Hurr Durr Derp!'));
+      Assert.strictEqual(str2, 'Hurr Durr Derp!');
     },
 
-    'eval sequence' : function () {
-      var env = Environment.createEnvironment();
-      env.put('someVal', 1340);
+    'eval sequences' : {
 
-      // (+ 10 32) == 42
-      var val1 = interpreter.eval({
-          type: 'PAIR',
-          value:
-          [
-            { type: 'SYMBOL', value: 'plus' },
-            { type: 'NUMBER', value: '10' },
-            { type: 'NUMBER', value: '32' } ] }, env);
+      '(+ 10 32) == 42' : function () {
+        var val = interpreter.eval(
+          cons(symbol('plus'),
+            cons(number('10'),
+              cons(number('32'), nil() ) ) )
+        );
 
-      Assert.strictEqual(val1, 42);
+        Assert.strictEqual(val, 42);
+      },
 
-      // (- someVal 3)
-      var val2 = interpreter.eval({
-          type: 'PAIR',
-          value:
-          [ { type: 'SYMBOL', value: 'minus' },
-            { type: 'SYMBOL', value: 'someVal' },
-            { type: 'NUMBER', value: '3' } ] }, env);
+      '(- someVal 3) == 1337' : function () {
+        var env = Environment.createEnvironment();
+        env.put('someVal', 1340);
 
-      Assert.strictEqual(val2, 1337);
+        var val = interpreter.eval(
+          cons(symbol('minus'),
+            cons(symbol('someVal'),
+              cons(number('3'), nil() ) ) ), 
+          env
+        );
 
-      var val3 = interpreter.eval({ type: 'PAIR',
-          value:
-          [ { type: 'SYMBOL', value: 'plus' },
-            { type: 'NUMBER', value: '3' },
-            { type: 'NUMBER', value: '2' } ] }, env);
+        Assert.strictEqual(val, 1337);
+      },
 
-      Assert.strictEqual(val3, 5);
     },
 
-    'eval define' : function () {
-      var val1 = interpreter.eval({
-          type: 'PAIR',
-          value: [
-            { type: 'SYMBOL', value: 'define' },
-            { type: 'SYMBOL', value: 'someVal' },
-            { type: 'NUMBER', value: '3' }
-          ]
-        });
+    '(define someVal 3)' : function () {
+      var val1 = interpreter.eval(
+        cons(symbol('define'),
+          cons(symbol('someVal'),
+            cons(number('3'), nil() ) ) )
+      );
       Assert.strictEqual(val1, 3);
 
-      var val2 = interpreter.eval({
-          type: 'SYMBOL', value: 'someVal'
-        });
-
+      var val2 = interpreter.eval(symbol('someVal'));
       Assert.strictEqual(val2, 3);
     },
 
-    'eval cons' : function () {
+    '(define foo (cons "asdf" 3))' : function () {
 
-      // (define foo (cons 'asdf' 3))
-      var val1 = interpreter.eval({
-          type: 'PAIR',
-          value: [
-            { type: 'SYMBOL', value: 'define' },
-            { type: 'SYMBOL', value: 'foo' },
-            { type: 'PAIR',
-              value: [
-                { type: 'SYMBOL', value: 'cons' },
-                { type: 'STRING', value: 'asdf' },
-                { type: 'NUMBER', value: '3' }
-              ]
-            }
-          ]
-        });
+      var val1 = interpreter.eval(
+        cons(symbol('define'),
+          cons(symbol('foo'),
+              cons(
+                cons(symbol('cons'),
+                  cons(string('asdf'),
+                    cons(number('3'), nil() ) ) ),
+                nil() ) ) )
+      );
 
-      Assert.deepEqual(val1, ['asdf', 3]);
+      Assert.deepEqual(val1, cons('asdf', 3));
 
-      var val2 = interpreter.eval({
-          type: 'SYMBOL', value: 'foo'
-        });
+      var val2 = interpreter.eval(symbol('foo'));
+      Assert.deepEqual(val2, cons('asdf', 3));
 
-      Assert.deepEqual(val2, ['asdf', 3]);
-
-      // (car (cons 'asdf' 3))
-      var val3 = interpreter.eval({
-          type: 'PAIR',
-          value:
-          [
-            { type: 'SYMBOL', value: 'car' },
-            { type: 'SYMBOL', value: 'foo' } ] }
+      var val3 = interpreter.eval(
+        cons(symbol('car'),
+          cons(symbol('foo'), nil() ) )
       );
 
       Assert.strictEqual(val3, 'asdf');
-    },
 
-    'eval cdr' : function () {
-      // (cdr (cons 'asdf' 3))
-      var val1 = interpreter.eval({
-          type: 'PAIR',
-          value: [
-            { type: 'SYMBOL', value: 'cdr' },
-            { type: 'PAIR',
-              value: [
-                { type: 'SYMBOL', value: 'cons' },
-                { type: 'STRING', value: 'asdf' },
-                { type: 'NUMBER', value: '3' }
-              ]
-            }
-          ]
-        });
-
-      Assert.strictEqual(val1, 3);
-    },
-
-    'eval if' : function () {
-      // (if (eq? 1 1) #t #f)
-      var val = interpreter.eval({
-          type: 'PAIR',
-          value: [
-            { type: 'SYMBOL', value: 'if' },
-            { type: 'PAIR',
-              value: [
-                { type: 'SYMBOL', value: 'eq?' },
-                { type: 'NUMBER', value: '1' },
-                { type: 'NUMBER', value: '1' }
-              ] },
-            { type: 'SYMBOL', value: '#t' },
-            { type: 'SYMBOL', value: '#f' }
-          ]
-        });
-
-      Assert.strictEqual(val, true);
-    },
-
-    'eval cond without else' : function () {
-      // (cond ((eq? 1 2) #f) ((eq? 2 2) #t)
-      var val = interpreter.eval({
-          type: 'PAIR',
-          value: [
-            { type: 'SYMBOL', value: 'cond' },
-            { type: 'PAIR',
-              value: [
-                { type: 'PAIR',
-                  value: [
-                    { type: 'SYMBOL', value: 'eq?' },
-                    { type: 'NUMBER', value: '1' },
-                    { type: 'NUMBER', value: '2' }
-                  ]
-                },
-                { type: 'SYMBOL', value: '#f' }
-              ]
-            },
-            { type: 'PAIR',
-              value: [
-                { type: 'PAIR',
-                  value: [
-                    { type: 'SYMBOL', value: 'eq?' },
-                    { type: 'NUMBER', value: '2' },
-                    { type: 'NUMBER', value: '2' }
-                  ]
-                },
-                { type: 'SYMBOL', value: '#t' }
-              ]
-            }
-          ]
-        }
+      var val4 = interpreter.eval(
+        cons(symbol('cdr'),
+          cons(symbol('foo'), nil() ) )
       );
-      Assert.strictEqual(val, true);
+
+      Assert.strictEqual(val4, 3);
     },
 
-    'eval cond with else' : function () {
-      // (cond ((eq? 1 2) #f) ((eq? 2 2) #t))
-      var val = interpreter.eval({
-          type: 'PAIR',
-          value: [
-            { type: 'SYMBOL', value: 'cond' },
-            { type: 'PAIR',
-              value: [
-                { type: 'SYMBOL', value: 'else'},
-                { type: 'STRING', value: 'foo' }
-              ]
-            }
-          ]
-        });
+    /*
+     '(cdr (cons 'asdf' 3))' : function () {
+     var val1 = interpreter.eval({
+     type: 'PAIR',
+     value: [
+     { type: 'SYMBOL', value: 'cdr' },
+       { type: 'PAIR',
+         value: [
+         { type: 'SYMBOL', value: 'cons' },
+           { type: 'STRING', value: 'asdf' },
+             { type: 'NUMBER', value: '3' }
+             ]
+           }
+         ]
+       });
 
-      Assert.strictEqual(val, 'foo');
-    },
+       Assert.strictEqual(val1, 3);
+     },
 
-    'eval lambda statements' : {
-      '((lambda (n) (* n 10)) 3)' : function () {
-        var val = interpreter.eval({
-            type : "PAIR",
-            value : [ {
-                type : "PAIR", value : [
-                  { type : "SYMBOL", value : "lambda" },
-                  { type : "PAIR",
-                    value: [ { type : "SYMBOL", value : "n" } ]
-                  },
-                  {
-                    type: "PAIR",
-                    value: [
-                      { type : "SYMBOL", value : "multiply" },
-                      { type : "SYMBOL", value : "n" },
-                      { type : "NUMBER", value : "10" }
-                    ] }
-                ] },
-              { type : "NUMBER", value : "3" }
-            ] });
+     'eval if' : function () {
+     // (if (eq? 1 1) #t #f)
+     var val = interpreter.eval({
+     type: 'PAIR',
+     value: [
+     { type: 'SYMBOL', value: 'if' },
+       { type: 'PAIR',
+         value: [
+         { type: 'SYMBOL', value: 'eq?' },
+           { type: 'NUMBER', value: '1' },
+             { type: 'NUMBER', value: '1' }
+             ] },
+             { type: 'SYMBOL', value: '#t' },
+               { type: 'SYMBOL', value: '#f' }
+               ]
+             });
 
-        Assert.strictEqual(val, 30);
-      }
-    }
+             Assert.strictEqual(val, true);
+           },
+
+           'eval cond without else' : function () {
+           // (cond ((eq? 1 2) #f) ((eq? 2 2) #t)
+           var val = interpreter.eval({
+           type: 'PAIR',
+           value: [
+           { type: 'SYMBOL', value: 'cond' },
+             { type: 'PAIR',
+               value: [
+               { type: 'PAIR',
+                 value: [
+                 { type: 'SYMBOL', value: 'eq?' },
+                   { type: 'NUMBER', value: '1' },
+                     { type: 'NUMBER', value: '2' }
+                     ]
+                   },
+                   { type: 'SYMBOL', value: '#f' }
+                   ]
+                 },
+                 { type: 'PAIR',
+                   value: [
+                   { type: 'PAIR',
+                     value: [
+                     { type: 'SYMBOL', value: 'eq?' },
+                       { type: 'NUMBER', value: '2' },
+                         { type: 'NUMBER', value: '2' }
+                         ]
+                       },
+                       { type: 'SYMBOL', value: '#t' }
+                       ]
+                     }
+                   ]
+                 }
+               );
+               Assert.strictEqual(val, true);
+             },
+
+             'eval cond with else' : function () {
+             // (cond ((eq? 1 2) #f) ((eq? 2 2) #t))
+             var val = interpreter.eval({
+             type: 'PAIR',
+             value: [
+             { type: 'SYMBOL', value: 'cond' },
+               { type: 'PAIR',
+                 value: [
+                 { type: 'SYMBOL', value: 'else'},
+                   { type: 'STRING', value: 'foo' }
+                   ]
+                 }
+               ]
+             });
+
+             Assert.strictEqual(val, 'foo');
+           },
+
+           'eval lambda statements' : {
+           '((lambda (n) (* n 10)) 3)' : function () {
+           var val = interpreter.eval({
+           type : "PAIR",
+           value : [ {
+           type : "PAIR", value : [
+           { type : "SYMBOL", value : "lambda" },
+             { type : "PAIR",
+               value: [ { type : "SYMBOL", value : "n" } ]
+             },
+             {
+               type: "PAIR",
+               value: [
+               { type : "SYMBOL", value : "multiply" },
+                 { type : "SYMBOL", value : "n" },
+                   { type : "NUMBER", value : "10" }
+                   ] }
+                 ] },
+                 { type : "NUMBER", value : "3" }
+                 ] });
+
+                 Assert.strictEqual(val, 30);
+               }
+             }
+
+             */
 
 
   }).export(module);

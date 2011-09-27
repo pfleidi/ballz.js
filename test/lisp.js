@@ -79,6 +79,7 @@ Vows.describe('Test lisp helpers').addBatch({
         Assert.deepEqual(Lisp.map(val, function (el) {
               return el * el;
             }), expected);
+
       },
 
       'reduce()' : function () {
@@ -92,7 +93,7 @@ Vows.describe('Test lisp helpers').addBatch({
               return acc + curr;
             }), 15);
 
-       var val2 = cons(1,
+        var val2 = cons(1,
           cons(2, cons(3,
               cons(4, cons(5, Lisp.nil() ) ) ) ) );
 
