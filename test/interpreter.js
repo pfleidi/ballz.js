@@ -175,46 +175,47 @@ Vows.describe('evaluate simple instructions').addBatch({
     },
 
 
-    /*
-     'eval cond without else' : function () {
-     // (cond ((eq? 1 2) #f) ((eq? 2 2) #t)
-     var val1 = interpreter.eval(
-     cons(symbol('cond'),
-     cons(
-     cons(
-     cons(symbol('eq?'),
-     cons(number('1'),
-     cons(number('2'), nil()
-   )
- )
-      ), false),
-      cons(
-      cons(
-      cons(symbol('eq?'),
-      cons(number('2'),
-      cons(number('2'), nil()
-    )
-  )
-), true), nil()
-                )
-              )
-            )
-          );
-
-          Assert.strictEqual(val1, true);
-        },
-
-        'eval cond with else' : function () {
-        // (cond (else 'foo'))
-        var val1 = interpreter.eval(
+    '(cond (#f 1) (#t 2))' : function () {
+      var val1 = interpreter.eval(
         cons(symbol('cond'),
-        cons(symbol('else'),
-        cons(string('foo'), nil())))
+          cons(
+            cons(symbol('#f'),
+                cons(number('1'), nil() ) ),
+            cons(cons(symbol('#t'), 
+                  cons(number('2'), nil() ) ),
+                nil() ) ) )
+      );
+
+      Assert.strictEqual(val1, 2);
+    },
+
+    '(cond (#t 1) (#f 2))' : function () {
+      var val1 = interpreter.eval(
+        cons(symbol('cond'),
+          cons(
+            cons(symbol('#t'),
+                cons(number('1'), nil() ) ),
+            cons(cons(symbol('#t'), 
+                  cons(number('2'), nil() ) ),
+                nil() ) ) )
+      );
+
+      Assert.strictEqual(val1, 1);
+    },
+
+
+
+    '(cond (else "foo"))' : function () {
+      var val1 = interpreter.eval(
+        cons(symbol('cond'),
+          cons(
+            cons(symbol('else'),
+              cons(string('foo'), nil())),
+            nil()))
       );
 
       Assert.strictEqual(val1, 'foo');
     },
-    */
     /*
      '(cdr (cons 'asdf' 3))' : function () {
      var val1 = interpreter.eval({
