@@ -46,12 +46,12 @@ Vows.describe('test all components of interpreter').addBatch({
 
     'test boolean expressions' : {
       '1 == 1' : function () {
-        var test = '(eq? 1 1)';
+        var test = '(equals 1 1)';
         execAssert(test, true);
       },
 
       '1 === 2' : function () {
-        var test = '(eq? 1 2)';
+        var test = '(equals 1 2)';
         execAssert(test, false);
       }
     },
@@ -59,22 +59,22 @@ Vows.describe('test all components of interpreter').addBatch({
     'test conditional expressions' : {
 
       'if (1 === 1)' : function () {
-        var test = '(if (eq? 1 1) #t #f)';
+        var test = '(if (equals 1 1) #t #f)';
         execAssert(test, true);
       },
 
       'if (1 === 2)' : function () {
-        var test = '(if (eq? 1 2) #t #f)';
+        var test = '(if (equals 1 2) #t #f)';
         execAssert(test, false);
       },
 
       'cond without else 1' : function () {
-        var test = '(cond ((eq? 1 2) "a") ((eq? 2 2) "b")';
+        var test = '(cond ((equals 1 2) "a") ((equals 2 2) "b")';
         execAssert(test, 'b');
       },
 
       'cond without else 2' : function () {
-        var test = '(cond ((eq? 1 1) "a") ((eq? 2 2) "b")';
+        var test = '(cond ((equals 1 1) "a") ((equals 2 2) "b")';
         execAssert(test, 'a');
       },
 
