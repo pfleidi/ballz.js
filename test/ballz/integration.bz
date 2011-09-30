@@ -9,12 +9,12 @@
 (assert (+ 1 2 3 4 5) 15)
 (assert (+ (* 2 2) (* 4 4)) 20)
 
-(assert (eq? 1 1) #t)
-(assert (eq? 1 2) #f)
+(assert (equals 1 1) #t)
+(assert (equals 1 2) #f)
 
-(assert (if (eq? 1 2) #t #f) #f)
-(assert (cond ((eq? 1 2) "a") ((eq? 2 2) "b")) "b")
-(assert (cond ((eq? 1 1) "a") ((eq? 2 2) "b")) "a")
+(assert (if (equals 1 2) #t #f) #f)
+(assert (cond ((equals 1 2) "a") ((equals 2 2) "b")) "b")
+(assert (cond ((equals 1 1) "a") ((equals 2 2) "b")) "a")
 (assert (cond (#f "should not happen") (else "test")) "test")
 (assert (cond (#f "a") (#f "b") (#t "c") (else "test")) "c")
 

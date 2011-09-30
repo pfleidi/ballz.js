@@ -10,67 +10,64 @@ var interpreter = require('../lib/interpreter').createInterpreter(
   Environment.createEnvironment()
 );
 
+var Lisp = require('../lib/lisp');
+
+var cons = Lisp.cons;
+var number = Lisp.number;
+var string = Lisp.string;
+var symbol = Lisp.symbol;
+var nil = Lisp.nil;
+
+
 Vows.describe('test list structures').addBatch({
 
     'eval cons' : function () {
       // (define foo (cons 'asdf' 3))
-      var val1 = interpreter.eval({
-          type: 'PAIR',
-          value: [
-            { type: 'SYMBOL', value: 'define' },
-            { type: 'SYMBOL', value: 'foo' },
-            { type: 'PAIR',
-              value: [
-                { type: 'SYMBOL', value: 'cons' },
-                { type: 'STRING', value: 'asdf' },
-                { type: 'NUMBER', value: '3' }
-              ]
-            }
-          ]
-        });
+			var val1 = interpreter.eval(
+        cons(symbol('define'),
+          cons(symbol('foo'),
+              cons(
+                cons(symbol('cons'),
+                  cons(string('asdf'),
+                    cons(number('3'), nil() ) ) ),
+                nil() ) ) )
+      );
 
-      Assert.deepEqual(val1, ['asdf', 3]);
+			
+      Assert.deepEqual(val1, cons('asdf',3));
 
-      var val2 = interpreter.eval({
-          type: 'SYMBOL', value: 'foo'
-        });
+      var val2 = interpreter.eval(
+				symbol('foo')
+			);
 
-      Assert.deepEqual(val2, ['asdf', 3]);
+      Assert.deepEqual(val2, cons('asdf',3));
     },
 
     'eval car' : function () {
       // (car (cons 'asdf' 3))
-      var val1 = interpreter.eval({
-          type: 'PAIR',
-          value: [
-            { type: 'SYMBOL', value: 'car' },
-            { type: 'PAIR',
-              value: [
-                { type: 'SYMBOL', value: 'cons' },
-                { type: 'STRING', value: 'asdf' },
-                { type: 'NUMBER', value: '3' }
-              ]
-            }
-          ]
-        });
+      var val1 = interpreter.eval(
+				cons(symbol('car'),
+						cons(
+							cons(symbol('cons'),
+									cons(string('asdf'),
+											cons(number('3'), nil)
+											)), nil)
+			));
+
       Assert.strictEqual(val1, 'asdf');
     },
 
     'eval cdr' : function () {
       // (cdr (cons 'asdf' 3))
-      var val1 = interpreter.eval({
-          type: 'PAIR',
-          value: [
-            { type: 'SYMBOL', value: 'cdr' },
-            { type: 'PAIR',
-              value: [
-                { type: 'SYMBOL', value: 'cons' },
-                { type: 'STRING', value: 'asdf' },
-                { type: 'NUMBER', value: '3' }
-              ]
-            }
-          ]
-        });
+			var val1 = interpreter.eval(
+				cons(symbol('cdr'),
+						cons(
+							cons(symbol('cons'),
+									cons(string('asdf'),
+											cons(number('3'), nil)
+											)), nil)
+			));
+
       Assert.strictEqual(val1, 3);
     }
 

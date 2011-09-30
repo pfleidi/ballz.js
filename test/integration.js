@@ -69,12 +69,12 @@ Vows.describe('test all components of interpreter').addBatch({
       },
 
       'cond without else 1' : function () {
-        var test = '(cond ((equals 1 2) "a") ((equals 2 2) "b")';
+        var test = '(cond ((equals 1 2) "a") ((equals 2 2) "b"))';
         execAssert(test, 'b');
       },
 
       'cond without else 2' : function () {
-        var test = '(cond ((equals 1 1) "a") ((equals 2 2) "b")';
+        var test = '(cond ((equals 1 1) "a") ((equals 2 2) "b"))';
         execAssert(test, 'a');
       },
 
