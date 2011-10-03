@@ -71,6 +71,17 @@ Vows.describe('evaluate simple instructions').addBatch({
           { token: ')', type: 'R_PAREN', line: 2 },
           { token: ')', type: 'R_PAREN', line: 2 }
         ]); 
+    },
+
+    'test scan quote': function () {
+      var val1 = "(quote 1)";
+      
+      Assert.deepEqual(Scanner.tokenize(val1),[
+      { token: '(', type: 'L_PAREN', line: 1},
+      { token: 'quote', type: 'QUOTE', line: 1},
+      { token: '1' , type: 'NUMBER', line: 1},
+      { token: ')', type: 'R_PAREN', line: 1}
+      ]);
     }
 
   }).export(module);
