@@ -1,42 +1,98 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>ballz.js - web repl</title>
-        
-        <link href='http://fonts.googleapis.com/css?family=Lekton' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" type="text/css" href="./style.css" />
-    </head>
-    <body>
-      <div id="wrapper">
-        <div id="container">
-          <h1>ballz.js</h1>
-          <h2>a tiny lisp interpreter</h2>
-          <div id="output">
-          </div>
-          <form id="input">
-            <input id="txt_lisp" type="text">
-            <input id="btn_eval" type="submit" value="evaluate">
-          </form>
-        </div>  
-      </div>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ballz.js - web repl</title>
 
-      <script src='http://code.jquery.com/jquery-latest.min.js'></script>
-      <script src="http://localhost:8080/socket.io/socket.io.js"></script>
-      <script>
-        var socket = io.connect('http://localhost:8080');
+    <link href='http://fonts.googleapis.com/css?family=Lekton' rel='stylesheet' type='text/css'>
 
-        $("#btn_eval").click(function (event) {
-          event.preventDefault();
-          socket.emit('eval', {lisp: $('#txt_lisp').val()});
-        });
+    <style type="text/css">
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
 
-        socket.on('result', function (data) {
-          $('#output').append('<p>'+$('#txt_lisp').val()+'<\/p>');
-          $('#output').append("<p class='result'>==> "+data.result+'<\/p>');
-          $('#txt_lisp').val('');
-        });
+      #wrapper {
+        margin: 0 auto;
+      }
 
-       </script>
-    </body>
+      #container {
+        width: 500px;
+        margin: 0 auto;
+        padding: 5px;
+      }
+
+      #output{
+        height: 500px;
+        width: 500px;
+        border: 1px solid #808080;
+        padding: 5px;
+      }
+
+      #output p {
+        padding: 0;
+        margin: 5px 0 0 0;
+        font-family: 'Lekton', sans-serif;
+      }
+
+      #input {
+        padding-top: 5px;
+        width: 500px;
+        height: 25px;
+      }
+
+      #txt_lisp {
+        width: 400px;
+      }
+
+      #btn_eval {
+        width: 80px;
+        margin-left: 10px;
+      }
+
+      .result {
+        color: green;
+      }
+
+      .error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="container">
+        <h1>ballz.js</h1>
+        <h2>a tiny lisp interpreter</h2>
+        <div id="output">
+        </div>
+        <form id="input">
+          <input id="txt_lisp" type="text">
+          <input id="btn_eval" type="submit" value="evaluate">
+        </form>
+      </div>  
+    </div>
+
+    <script src='http://code.jquery.com/jquery-latest.min.js'></script>
+    <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect('http://localhost:8080');
+
+      $("#btn_eval").click(function (event) {
+        event.preventDefault();
+        socket.emit('eval', {lisp: $('#txt_lisp').val()});
+      });
+
+      socket.on('result', function (data) {
+        $('#output').append('<p>'+$('#txt_lisp').val()+'<\/p>');
+        $('#output').append("<p class='result'>==> "+data.result+'<\/p>');
+        $('#txt_lisp').val('');
+      });
+
+      socket.on('error', function (data) {
+        $('#output').append('<p>'+$('#txt_lisp').val()+'<\/p>');
+        $('#output').append("<p class='error'>==> "+data.error.split('\n')[0]+'<\/p>');
+      });
+
+    </script>
+  </body>
 </html>

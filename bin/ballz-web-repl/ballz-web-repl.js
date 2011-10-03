@@ -16,23 +16,7 @@ var interpreter = require('../../lib/interpreter').createInterpreter(
 
 
 server = http.createServer(function(req, res){
-
-    var uri = url.parse(req.url).pathname,
-        filename = path.join(process.cwd(), uri);
-
-    path.exists(filename, function(exists) {
-      if(!exists) {
-        res.writeHead(404, {"Content-Type": "text/plain"});
-        res.write("404 Not Found\n");
-        res.end();
-        return;
-      }
-
-      if(fs.statSync(filename).isDirectory()) {
-        filename = "client.html";
-      }
-
-      fs.readFile(filename, "binary", function(err, file) {
+      fs.readFile('client.html', "binary", function(err, file) {
         if(err) {
           res.writeHead(500, {"Content-Type": "text/plain"});
           res.write(err + "\n");
@@ -44,7 +28,6 @@ server = http.createServer(function(req, res){
         res.write(file, "binary");
         res.end();
       });
-    });
 });
 server.listen(8080);
 
@@ -53,7 +36,9 @@ var io = io.listen(server);
 
 function exec(cmd) {
   var ast = Parser.parse(cmd);
-  return interpreter.eval(ast);
+  var eval = interpreter.eval(ast);
+  sys.puts(eval);
+  return eval;
 }
 
 io.sockets.on('connection', function (socket) {
