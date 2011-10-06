@@ -19,14 +19,14 @@ var repl = Readline.createInterface(process.stdin, process.stdout);
 
 function exec(cmd) {
   var ast = Parser.parse(cmd);
-  return Eyes.inspect(interpreter.eval(ast));
+  return interpreter.eval(ast);
 }
 
 repl.setPrompt('ballz >');
 
 repl.on('line', function (cmd) {
     try {
-      console.log('==> ' + exec(cmd));
+      Eyes.inspect(exec(cmd));
     } catch (e) {
       console.log(e.message);
       console.log(e.stack);
