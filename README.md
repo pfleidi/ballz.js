@@ -28,7 +28,7 @@ After all dependencies are installed, run `make test`.
 * `(eval (expr))`: explicitly evaluates `expr`
 * `(define (symbol) (expr))`: assigns `expr` to `symbol`
 * `(lambda (arg-symbols) (body-expr))`: creates anonymous function with arguments `arg-symbols` and function body `body-expr`
-* `(cond ((condition) (expr)) ((condition) (expr)) (else (expr)))`: evaluates `expr` if related `condition` evaluates to `true`, `else` is optional if no `condition` evaluated to true
+* `(cond ((condition) (expr)) ((condition) (expr)) (else (expr)))`: evaluates `expr` if related `condition` evaluates to `true`, `else` is optional if no `condition` evaluated to `true`
 
 ### Pair
 * `(cons (expr) (expr))`: creates pair of both expressions `expr`
