@@ -25,7 +25,7 @@ Vows.describe('evaluate simple instructions').addBatch({
     },
 
     'test scan symbol' : function () {
-      var val1 = "(define x 4)";
+      var val1 = '(define x 4)';
 
       Assert.deepEqual(Scanner.tokenize(val1), [
           { token: '(', type: 'L_PAREN', line: 1 },
@@ -37,7 +37,7 @@ Vows.describe('evaluate simple instructions').addBatch({
     },
 
     'test scan string' : function () {
-      var val1 = "(define x 'asdf')"
+      var val1 = '(define x "asdf")';
       Assert.deepEqual(Scanner.tokenize(val1), [
           { token: '(', type: 'L_PAREN', line: 1 },
           { token: 'define', type: 'SYMBOL', line: 1 },
@@ -47,8 +47,21 @@ Vows.describe('evaluate simple instructions').addBatch({
         ]); 
     },
 
+   'test scan string with whitespace' : function () {
+      var val1 = '(define x "asdf hjkl")';
+      Assert.deepEqual(Scanner.tokenize(val1), [
+          { token: '(', type: 'L_PAREN', line: 1 },
+          { token: 'define', type: 'SYMBOL', line: 1 },
+          { token: 'x', type: 'SYMBOL', line: 1 },
+          { token: 'asdf hjkl', type: 'STRING', line: 1 },
+          { token: ')', type: 'R_PAREN', line: 1 }
+        ]); 
+    },
+
+
+
     'test scan number' : function () {
-      var val1 = "(+ 4 4)"
+      var val1 = '(+ 4 4)'
       Assert.deepEqual(Scanner.tokenize(val1), [
           { token: '(', type: 'L_PAREN', line: 1 },
           { token: '+', type: 'SYMBOL', line: 1 },
@@ -59,7 +72,7 @@ Vows.describe('evaluate simple instructions').addBatch({
     },
 
     'test scan complex' : function () {
-      var val1 = "(cons 'asdf'\n (cons 4 null))"
+      var val1 = '(cons "asdf"\n (cons 4 null))'
       Assert.deepEqual(Scanner.tokenize(val1), [
           { token: '(', type: 'L_PAREN', line: 1 },
           { token: 'cons', type: 'SYMBOL', line: 1 },
@@ -74,7 +87,7 @@ Vows.describe('evaluate simple instructions').addBatch({
     },
 
     'test scan quote': function () {
-      var val1 = "(quote 1)";
+      var val1 = '(quote 1)';
       
       Assert.deepEqual(Scanner.tokenize(val1),[
       { token: '(', type: 'L_PAREN', line: 1},
