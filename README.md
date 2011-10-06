@@ -35,11 +35,11 @@ After you've installed npm, you can install the dependencies by running the foll
 
 ## Running Ballz REPL
 
-  	`node bin/ballz-repl.js` or `./bin/ballz-repl.js`
+`node bin/ballz-repl.js` or `./bin/ballz-repl.js`
 
 ## Running Ballz Web-REPL
 
-  	`node bin/ballz-web-repl/ballz-web-repl.js` or `./bin/ballz-web-repl/ballz-web-repl.js`
+`node bin/ballz-web-repl/ballz-web-repl.js` or `./bin/ballz-web-repl/ballz-web-repl.js`
 
 ## Running tests
 
