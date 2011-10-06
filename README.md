@@ -49,6 +49,12 @@ To run our unit tests, you need to install the development dependencies:
 
 After all dependencies are installed, run `make test`.
 
+## Running lint
+
+To run the jslint/nodelint code quality measurement tool, just run:
+
+    make lint
+
 ## Features
 
 ### Lang
