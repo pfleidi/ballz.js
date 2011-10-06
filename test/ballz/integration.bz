@@ -29,3 +29,5 @@
 
 (define multipair (cons 2 5))
 (assert ((lambda (x) (* (car multipair) (cdr multipair) x)) 10) 100)
+
+(assert (eval (quote (+ 1 1))) 2)

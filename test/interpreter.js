@@ -16,6 +16,7 @@ var number = Lisp.number;
 var string = Lisp.string;
 var symbol = Lisp.symbol;
 var nil = Lisp.nil;
+var quote = Lisp.quote;
 
 Vows.describe('evaluate simple instructions').addBatch({
 
@@ -248,6 +249,108 @@ Vows.describe('evaluate simple instructions').addBatch({
               cons(number('3'), nil() ) )
           );
         }
+      },
+
+      'eval quote' : {
+       '(quote (plus 1 1))' : function () {
+          var val = interpreter.eval(
+            cons(
+              quote(
+                cons(symbol('plus'),
+                    cons(number('1'),
+                          cons(number('1'),nil())
+                         )
+                    )
+              ), nil()
+            )
+          );
+        
+          Assert.deepEqual(val, 
+            cons(symbol('plus'),
+                cons(number('1'),
+                     cons(number('1'), nil()
+                         )
+                    )
+                )
+          );
+       },
+
+       '(quote 1)' : function () {
+          var val = interpreter.eval(
+            cons(quote(
+              number('1')
+            ), nil())
+          );
+
+          Assert.strictEqual(val, 1);
+       },
+
+       '(quote \'foo\')' : function () {
+         var val = interpreter.eval(
+            cons(quote(
+              string('foo')
+            ), nil())
+          );
+
+          Assert.deepEqual(val, 'foo');
+
+       }
+    },
+
+    'eval eval' : {
+      '(eval (quote (plus 1 1)))' : function () {
+        var val = interpreter.eval(
+          cons(symbol('eval'),
+               cons(
+                 cons(
+                    quote(
+                      cons(symbol('plus'),
+                          cons(number('1'),
+                            cons(number('1'),nil())
+                          )
+                      )
+                    ), nil()
+                  ), nil()
+               )
+          )
+        );
+
+        Assert.strictEqual(val, 2);
+      },
+
+      '(eval (quote 1))' : function () {
+        var val = interpreter.eval(
+          cons(symbol('eval'),
+               cons(cons(quote(number('1')),nil()),nil()))
+        );
+
+        Assert.strictEqual(val, 1);
+      },
+
+      '(eval 1)' : function () {
+        var val = interpreter.eval(
+          cons(symbol('eval'), cons(number('1'),nil()))
+        );
+
+        Assert.strictEqual(val, 1);
+      },
+
+      '(eval (plus 1 1))' : function () {
+        var val = interpreter.eval(
+          cons(symbol('eval'),
+            cons(
+              cons(symbol('plus'),
+                  cons(number('1'),
+                      cons(number('1'), nil())
+                  )
+              ), nil()
+            )
+          )
+        );
+
+        Assert.strictEqual(val, 2);
       }
+    }
+
 
     }).export(module);

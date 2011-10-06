@@ -9,6 +9,7 @@ var number = Lisp.number;
 var string = Lisp.string;
 var symbol = Lisp.symbol;
 var nil = Lisp.nil;
+var quote = Lisp.quote;
 
 Vows.describe('evaluate simple instructions').addBatch({
 
@@ -57,7 +58,7 @@ Vows.describe('evaluate simple instructions').addBatch({
     },
 
 
-    'parse wrapped conss' : function () {
+    'parse wrapped cons' : function () {
       Assert.deepEqual(Parser.parse('(foo x (foo 5 asdf))'),
         cons(symbol('foo'),
           cons(symbol('x'),
@@ -78,6 +79,12 @@ Vows.describe('evaluate simple instructions').addBatch({
               cons(number('10'),
                 cons(number('2'), nil() ) ) ),
             cons(number('5'), nil() ) ) )
+      );
+    },
+
+    'parse quote' : function () {
+      Assert.deepEqual(Parser.parse('(quote (plus 1 1))'),
+        cons(quote(cons(symbol('plus'),cons(number('1'),cons(number('1'),nil())))),nil())
       );
     }
 
